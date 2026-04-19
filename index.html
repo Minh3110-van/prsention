@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARTIST PRESENTATION | HIGH-END DESIGN</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/black.min.css">
+    
+    <style>
+        :root { --accent: #00f2ff; --fire: #ff0055; }
+        
+        /* Hiệu ứng nền HẠT SÁNG (Particles) giả lập không gian */
+        #particles-js {
+            position: absolute; width: 100%; height: 100%;
+            background-color: #050505; z-index: -1;
+        }
+
+        /* Hiệu ứng chữ RỰC LỬA gợn sóng (Wavy Glow) */
+        .glitch-glow {
+            text-transform: uppercase;
+            font-weight: 900 !important;
+            background: linear-gradient(to right, #ff4b2b, #ff416c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glitch-glow-anim 1.5s ease-in-out infinite;
+            text-shadow: 0 0 10px rgba(255, 65, 108, 0.7);
+        }
+
+        @keyframes glitch-glow-anim {
+            0%, 100% { filter: hue-rotate(0deg) drop-shadow(0 0 5px #ff4b2b); }
+            50% { filter: hue-rotate(45deg) drop-shadow(0 0 15px #ff416c); }
+        }
+
+        /* Hiệu ứng chữ GIẬT GIẬT (Glitch Effect) mạnh mẽ */
+        .glitch-text {
+            font-weight: 900 !important;
+            text-transform: uppercase;
+            position: relative;
+            text-shadow: 0.05em 0 0 var(--fire), -0.05em -0.025em 0 var(--accent);
+            animation: glitch-anim 300ms infinite;
+        }
+
+        @keyframes glitch-anim {
+            0% { transform: translate(0); }
+            10% { transform: translate(-1px, 1px); }
+            20% { transform: translate(-1px, -1px); }
+            30% { transform: translate(1px, 1px); }
+            40% { transform: translate(1px, -1px); }
+            50% { transform: translate(-1px, 1px); }
+            60% { transform: translate(-1px, -1px); }
+            70% { transform: translate(1px, 1px); }
+            80% { transform: translate(1px, -1px); }
+            100% { transform: translate(0); }
+        }
+
+        /* Thiết kế CARD nội dung trong suốt (Glassmorphism) */
+        .content-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 30px !important;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            text-align: left;
+        }
+
+        .highlight { color: var(--accent); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div id="particles-js"></div>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <section data-autoslide="2500" data-background-color="#000">
+                <h1 class="glitch-glow" style="font-size: 3em;">WELCOME PRESENTATION</h1>
+                <p style="opacity: 0.5;">Chuẩn bị bước vào thế giới sáng tạo...</p>
+            </section>
+
+            <section data-transition="zoom-in fade-out">
+                <h1 class="glitch-text" style="font-size: 3.5em;">NGHỀ HỌA SĨ</h1>
+                <h3 style="letter-spacing: 12px; color: var(--accent);">SÁNG TÁC TRANH</h3>
+                <p style="opacity: 0.7;">Định nghĩa lại không gian thị giác</p>
+            </section>
+
+            <section data-transition="convex">
+                <div class="content-card">
+                    <h2 class="highlight">BẢN CHẤT CÔNG VIỆC</h2>
+                    <hr border="0" height="1px" background="#333" style="margin-bottom: 20px;">
+                    <p class="fragment fade-right">✨ Thể hiện <span class="highlight">Tư tưởng nghệ thuật</span></p>
+                    <p class="fragment fade-right" style="margin-top: 15px;">❤️ Gửi gắm <span class="highlight">Tình cảm & Tâm huyết</span></p>
+                    <p class="fragment fade-right" style="margin-top: 15px;">👁️ Tạo ra giá trị chạm đến <span class="highlight">Thị giác</span></p>
+                </div>
+            </section>
+
+            <section>
+                <section data-transition="slide-in zoom-out">
+                    <h2 class="glitch-text" style="font-size: 2.5em;">SẢN PHẨM ĐẦU RA</h2>
+                    <div style="margin-top: 50px;">
+                        <div class="fragment grow highlight" style="font-size: 2.5em; text-transform: uppercase;">Tranh Hội Hoạ</div>
+                        <p style="font-style: italic; opacity: 0.7;">(Sơn dầu, Kỹ thuật số, Màu nước...)</p>
+                    </div>
+                </section>
+                
+                <section data-background-color="var(--fire)" data-transition="fade-in convex-out">
+                    <h2 style="color: white; font-weight: bold;">MÔI TRƯỜNG LÀM VIỆC</h2>
+                    <h1 class="fragment custom glow" style="font-size: 5em; color: black; font-weight: 900; background: #fff; padding: 20px; border-radius: 10px;">XƯỞNG VẼ</h1>
+                    <p>Nơi tự do sáng tạo không giới hạn</p>
+                </section>
+            </section>
+
+            <section data-background-iframe="https://giphy.com/embed/3o7TKMGpxVf4D7SPhu" data-background-interactive>
+                <div style="background: rgba(0,0,0,0.85); padding: 50px; border-radius: 30px; border: 1px solid var(--accent);">
+                    <h2 class="glitch-text" style="font-size: 3em;">THANK YOU!</h2>
+                    <p style="letter-spacing: 5px;">Presentation by <span class="highlight">YOUR NAME</span></p>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+    <script>
+        // Khởi tạo Reveal.js với cấu hình mạnh nhất để đạt hiệu ứng "cháy"
+        Reveal.initialize({
+            hash: true, // Cho phép dùng # slide
+            controls: true, // Hiển thị nút điều khiển
+            progress: true, // Thanh tiến trình
+            center: true, // Căn giữa slide
+            transition: 'zoom', // Kiểu chuyển slide chính: Phóng to
+            backgroundTransition: 'zoom' // Kiểu chuyển nền: Phóng to
+        });
+
+        // Cấu hình hạt nền (Particles) cho chất nghệ sĩ & công nghệ
+        particlesJS('particles-js', {
+            "particles": {
+                "number": { "value": 90, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": ["#00f2ff", "#ff0055", "#ffffff"] }, // Mix màu cyan, fire, trắng
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.6 },
+                "size": { "value": 3 },
+                "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.3, "width": 1 },
+                "move": { "enable": true, "speed": 4 }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" } }
+            }
+        });
+    </script>
+</body>
+</html>
