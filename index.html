@@ -3,187 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ARTIST MULTIVERSE | SUPREME 3D EXPERIENCE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Pacifico&display=swap" rel="stylesheet">
+    <title>ARTIST SUPREMACY | GLOBAL DESIGNER EDITION</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Syncopate:wght@700&display=swap" rel="stylesheet">
     
     <style>
         body { margin: 0; overflow: hidden; background: #000; font-family: 'Montserrat', sans-serif; }
-        canvas { display: block; }
+        canvas { display: block; position: fixed; top: 0; left: 0; z-index: 1; }
 
         #ui-layer {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 10;
+            pointer-events: none; z-index: 10; display: flex; align-items: center; justify-content: center;
         }
 
         .slide-content {
-            position: absolute; top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center; width: 80%;
-            opacity: 0; visibility: hidden;
-            transition: all 0.5s ease;
+            position: absolute; text-align: center; width: 85%;
+            opacity: 0; transform: scale(1.5) rotateX(20deg);
+            filter: blur(20px); transition: all 1.2s cubic-bezier(0.19, 1, 0.22, 1);
         }
 
-        .slide-content.active { opacity: 1; visibility: visible; }
+        .slide-content.active {
+            opacity: 1; transform: scale(1) rotateX(0deg); filter: blur(0px);
+            pointer-events: auto;
+        }
 
         .title {
-            font-size: 6vw; color: #fff; text-transform: uppercase;
-            text-shadow: 0 0 20px rgba(255,255,255,0.5), 5px 5px 0px #ff0055;
-            margin-bottom: 10px; line-height: 1;
+            font-family: 'Syncopate', sans-serif; font-size: 7vw; color: #fff;
+            text-transform: uppercase; line-height: 0.8; letter-spacing: -2px;
+            text-shadow: 0 0 30px rgba(0, 242, 255, 0.8); margin-bottom: 20px;
         }
 
-        .subtitle {
-            font-family: 'Pacifico', cursive; font-size: 3vw;
-            color: #39FF14; text-shadow: 2px 2px 0px #000;
+        .highlight-text {
+            color: #ff0055; text-shadow: 0 0 20px #ff0055;
         }
 
-        .description {
-            color: #fff; font-size: 1.5vw; background: rgba(0,0,0,0.6);
-            padding: 20px; border-radius: 15px; border: 2px solid #39FF14;
-            max-width: 800px; margin: 20px auto; line-height: 1.5;
-            backdrop-filter: blur(10px); text-align: left;
+        .content-box {
+            background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px);
+            border-left: 10px solid #ff0055; border-right: 1px solid rgba(255,255,255,0.2);
+            padding: 40px; border-radius: 0 40px 0 40px; max-width: 900px;
+            margin: auto; text-align: left; box-shadow: 0 0 50px rgba(0,0,0,0.5);
         }
 
-        #hint {
-            position: fixed; bottom: 30px; width: 100%; text-align: center;
-            color: #fff; letter-spacing: 5px; font-size: 12px; opacity: 0.8;
-            animation: blink 1s infinite;
+        .detail-item {
+            font-size: 1.4vw; color: #fff; margin-bottom: 15px;
+            display: flex; align-items: flex-start;
         }
 
-        @keyframes blink { 50% { opacity: 0.2; } }
+        .detail-item i { color: #00f2ff; margin-right: 15px; font-style: normal; }
+
+        .progress-bar {
+            position: fixed; bottom: 0; left: 0; height: 5px;
+            background: linear-gradient(to right, #ff0055, #00f2ff);
+            transition: width 0.5s ease; z-index: 100;
+        }
     </style>
 </head>
-<body onclick="nextSlide()">
+<body onclick="executeTransition()">
+
+    <canvas id="world"></canvas>
+    <div class="progress-bar" id="progress"></div>
 
     <div id="ui-layer">
         <div class="slide-content active">
-            <h2 class="subtitle">Get Ready!</h2>
-            <h1 class="title">WELCOME<br>PRESENTATION</h1>
+            <h1 class="title">THE ARTIST<br><span class="highlight-text">ORIGIN</span></h1>
+            <p style="color: #00f2ff; letter-spacing: 10px; font-weight: bold;">SỰ KHỞI ĐẦU CỦA SÁNG TẠO</p>
         </div>
 
         <div class="slide-content">
-            <h1 class="title">NGHỀ HỌA SĨ</h1>
-            <h2 class="subtitle" style="color: #ff0055;">SÁNG TÁC TRANH</h2>
-            <p class="description">Họa sĩ là những người kiến tạo thế giới thông qua những nét vẽ đầy mê hoặc, biến hư vô thành những tác phẩm bất tử.</p>
-        </div>
-
-        <div class="slide-content">
-            <h1 class="title" style="font-size: 4vw;">CÔNG VIỆC CHỦ YẾU</h1>
-            <div class="description">
-                • <b>Nghiên cứu & Phác thảo:</b> Tìm kiếm linh hồn cho tác phẩm.<br>
-                • <b>Sáng tạo:</b> Sử dụng kỹ thuật hình họa, màu sắc để biểu đạt tư tưởng.<br>
-                • <b>Gửi gắm:</b> Mỗi nét cọ là một nhịp đập của trái tim nghệ sĩ.
+            <h1 class="title" style="font-size: 5vw;">NGHỀ HỌA SĨ<br><span class="highlight-text">SÁNG TÁC</span></h1>
+            <div class="content-box">
+                <div class="detail-item"><i>▶</i> Họa sĩ sáng tác tranh là những người sử dụng ngôn ngữ của hình ảnh, đường nét và màu sắc để biến những ý tưởng trừu tượng thành hiện thực hữu hình.</div>
+                <div class="detail-item"><i>▶</i> Họ không chỉ sao chép thực tại mà còn tái cấu trúc thế giới theo lăng kính tâm hồn riêng biệt.</div>
             </div>
         </div>
 
         <div class="slide-content">
-            <h1 class="title">SẢN PHẨM</h1>
-            <h2 class="subtitle" style="color: #00f2ff;">TRANH HỘI HỌA</h2>
-            <p class="description">Từ sơn dầu cổ điển, sơn mài truyền thống cho đến Digital Art hiện đại đầy tính đột phá.</p>
+            <h1 class="title" style="font-size: 4vw; color: #00f2ff;">CÔNG VIỆC CHỦ YẾU</h1>
+            <div class="content-box" style="border-left-color: #00f2ff;">
+                <div class="detail-item"><b>1. TÌM KIẾM CẢM HỨNG:</b> Nghiên cứu triết học, văn hóa, và trải nghiệm sống để tìm ra chủ đề sáng tác.</div>
+                <div class="detail-item"><b>2. THỰC NGHIỆM CHẤT LIỆU:</b> Thử nghiệm với các loại màu, dung môi, mặt phẳng (toan, gỗ, giấy, digital).</div>
+                <div class="detail-item"><b>3. QUY TRÌNH HÌNH HỌA:</b> Xây dựng bố cục, tỷ lệ, độ sáng tối và sự hài hòa của các mảng màu.</div>
+                <div class="detail-item"><b>4. TRIỂN LÃM & KẾT NỐI:</b> Đưa tác phẩm vào không gian trưng bày để đối thoại với khán giả.</div>
+            </div>
         </div>
 
         <div class="slide-content">
-            <h1 class="title">XƯỞNG VẼ</h1>
-            <h2 class="subtitle" style="color: #ffea00;">ART STUDIO</h2>
-            <p class="description">Thánh địa của sự tự do. Nơi màu vẽ và ánh sáng hòa quyện để tạo nên những phép màu thị giác.</p>
+            <h1 class="title">SẢN PHẨM<br><span class="highlight-text">DỰ ÁN</span></h1>
+            <div style="display: flex; gap: 20px;">
+                <div class="content-box">
+                    <h3 style="color: #ff0055;">HỘI HỌA TRUYỀN THỐNG</h3>
+                    <p style="color: #ccc; font-size: 1.1vw;">Sơn dầu, sơn mài, điêu khắc, và các dòng tranh lụa mang đậm giá trị văn hóa lịch sử.</p>
+                </div>
+                <div class="content-box" style="border-left-color: #00f2ff;">
+                    <h3 style="color: #00f2ff;">NEW MEDIA ART</h3>
+                    <p style="color: #ccc; font-size: 1.1vw;">Digital Painting, VR Art, và Concept Art phục vụ cho nền công nghiệp giải trí hiện đại.</p>
+                </div>
+            </div>
         </div>
 
         <div class="slide-content">
-            <h1 class="title" style="font-size: 8vw;">THANK YOU!</h1>
-            <h2 class="subtitle">SEE YOU AGAIN</h2>
+            <h1 class="title">STUDIO<br><span class="highlight-text">XƯỞNG VẼ</span></h1>
+            <div class="content-box">
+                <p style="font-size: 1.5vw; line-height: 1.8;">Xưởng vẽ là <b>Thánh địa của sự tự do</b>. Đây là không gian chuyên biệt được thiết kế để tối ưu hóa ánh sáng và cảm xúc. Môi trường này đòi hỏi sự kết hợp giữa sự lộn xộn đầy cảm hứng của màu sắc và sự ngăn nắp của tư duy kỹ thuật.</p>
+            </div>
+        </div>
+
+        <div class="slide-content">
+            <h1 class="title" style="font-size: 8vw; filter: drop-shadow(0 0 50px #ff0055);">FINISH.</h1>
+            <p style="color: #00f2ff; letter-spacing: 15px;">THIẾT KẾ BỞI SIÊU LẬP TRÌNH VIÊN</p>
         </div>
     </div>
-
-    <div id="hint">CLICK TO TRAVEL THROUGH ART UNIVERSE</div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
     <script>
-        let scene, camera, renderer, objects = [];
+        let scene, camera, renderer, particles = [], rings = [];
         let currentSlide = 0;
         const slides = document.querySelectorAll('.slide-content');
-        const colors = [0xff0055, 0x39ff14, 0x00f2ff, 0xffea00, 0xff00ff, 0x00ffaa];
-
-        // Khởi tạo không gian 3D
-        function init3D() {
+        
+        function init() {
             scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            renderer = new THREE.WebGLRenderer({ antialias: true });
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('world'), antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
-            document.body.appendChild(renderer.domElement);
+            renderer.setPixelRatio(window.devicePixelRatio);
 
-            // Tạo các khối 3D trang trí (Cọ vẽ giả lập, bảng màu)
-            const geometry = new THREE.IcosahedronGeometry(1, 0);
-            for (let i = 0; i < 100; i++) {
-                const material = new THREE.MeshPhongMaterial({
-                    color: colors[Math.floor(Math.random() * colors.length)],
-                    wireframe: true
-                });
-                const mesh = new THREE.Mesh(geometry, material);
-                mesh.position.set(Math.random() * 40 - 20, Math.random() * 40 - 20, Math.random() * 40 - 20);
-                mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0);
-                scene.add(mesh);
-                objects.push(mesh);
+            // Tạo không gian ngân hà hạt sáng
+            const pGeometry = new THREE.BufferGeometry();
+            const pCount = 2000;
+            const posArray = new Float32Array(pCount * 3);
+            for(let i=0; i < pCount * 3; i++) { posArray[i] = (Math.random() - 0.5) * 50; }
+            pGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            const pMaterial = new THREE.PointsMaterial({ size: 0.05, color: 0x00f2ff, transparent: true });
+            const pMesh = new THREE.Points(pGeometry, pMaterial);
+            scene.add(pMesh);
+            particles = pMesh;
+
+            // Tạo các vòng tròn nghệ thuật 3D
+            for(let i=0; i<5; i++) {
+                const rGeo = new THREE.TorusGeometry(i*3 + 5, 0.05, 16, 100);
+                const rMat = new THREE.MeshBasicMaterial({ color: i % 2 === 0 ? 0xff0055 : 0x00f2ff, transparent: true, opacity: 0.3 });
+                const ring = new THREE.Mesh(rGeo, rMat);
+                ring.rotation.x = Math.random() * Math.PI;
+                scene.add(ring);
+                rings.push(ring);
             }
 
-            const light = new THREE.DirectionalLight(0xffffff, 1);
-            light.position.set(1, 1, 5).normalize();
-            scene.add(light);
-            scene.add(new THREE.AmbientLight(0x404040));
-
-            camera.position.z = 10;
+            camera.position.z = 20;
         }
 
-        // Âm thanh Bass cực mạnh bằng code
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function playBeat() {
+        function playDeepImpact() {
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(60, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-            gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(40, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.8);
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.8);
             osc.connect(gain); gain.connect(audioCtx.destination);
-            osc.start(); osc.stop(audioCtx.currentTime + 0.4);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.8);
         }
 
-        function nextSlide() {
+        function executeTransition() {
             if (audioCtx.state === 'suspended') audioCtx.resume();
-            playBeat();
+            playDeepImpact();
 
-            // Ẩn slide hiện tại
+            // Hiệu ứng Warp Speed
+            gsap.to(camera.position, { z: 5, duration: 0.4, ease: "power2.in", onComplete: () => {
+                gsap.to(camera.position, { z: 20, duration: 1, ease: "elastic.out(1, 0.3)" });
+            }});
+
             slides[currentSlide].classList.remove('active');
             currentSlide = (currentSlide + 1) % slides.length;
+            
+            setTimeout(() => {
+                slides[currentSlide].classList.add('active');
+                document.getElementById('progress').style.width = ((currentSlide + 1) / slides.length * 100) + "%";
+            }, 400);
 
-            // Di chuyển Camera 3D "bay lượn"
-            gsap.to(camera.position, {
-                x: Math.random() * 10 - 5,
-                y: Math.random() * 10 - 5,
-                z: Math.random() * 5 + 5,
-                duration: 1.5,
-                ease: "expo.inOut",
-                onComplete: () => {
-                    slides[currentSlide].classList.add('active');
-                }
-            });
-
-            // Xoay các vật thể 3D mạnh mẽ hơn
-            objects.forEach(obj => {
-                gsap.to(obj.rotation, {
-                    x: obj.rotation.x + Math.PI,
-                    y: obj.rotation.y + Math.PI,
-                    duration: 2,
-                    ease: "power4.out"
-                });
+            // Xoay rings cực mạnh
+            rings.forEach(r => {
+                gsap.to(r.rotation, { x: r.rotation.x + Math.PI, y: r.rotation.y + Math.PI, duration: 2 });
             });
         }
 
         function animate() {
             requestAnimationFrame(animate);
-            objects.forEach((obj, i) => {
-                obj.rotation.x += 0.005;
-                obj.rotation.y += 0.005;
+            particles.rotation.y += 0.001;
+            particles.rotation.x += 0.0005;
+            rings.forEach((r, i) => {
+                r.rotation.z += 0.01 * (i + 1);
             });
             renderer.render(scene, camera);
         }
@@ -194,7 +204,7 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        init3D();
+        init();
         animate();
     </script>
 </body>
