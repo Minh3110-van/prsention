@@ -3,289 +3,308 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ĐẶC TRƯNG CÁC NGHỀ MĨ THUẬT</title>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Roboto:wght@400;700&family=Oswald:wght@700&display=swap" rel="stylesheet">
+    <title>Nghệ Thuật Sáng Tác Tranh | Flowing UI</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     
     <style>
-        body { margin: 0; overflow: hidden; background: #000; font-family: 'Roboto', sans-serif; color: #fff; }
-        canvas { display: block; position: fixed; top: 0; left: 0; z-index: 1; }
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+        
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            overflow: hidden; 
+            background: #000;
+            color: #333;
+        }
 
-        /* Giao diện UI */
-        #ui-layer {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 10; display: flex; align-items: center; justify-content: center;
+        /* Canvas vẽ hiệu ứng dải lụa chảy bổng */
+        canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 0;
+        }
+
+        /* Lớp phủ UI Kính mờ (Glassmorphism) */
+        #ui-container {
+            position: fixed; top: 0; left: 0; 
+            width: 100vw; height: 100vh;
+            z-index: 10;
+            display: flex; align-items: center; justify-content: center;
         }
 
         .slide {
-            position: absolute; text-align: center; width: 90%; max-width: 1000px;
-            opacity: 0; transform: scale(2); visibility: hidden;
-            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            position: absolute;
+            width: 80%; max-width: 900px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 30px;
+            padding: 60px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+            
+            /* Hiệu ứng chuyển cảnh mượt mà như video */
+            opacity: 0;
+            transform: translateY(50px) scale(0.95);
+            transition: all 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+            pointer-events: none;
         }
 
         .slide.active {
-            opacity: 1; transform: scale(1); visibility: visible;
-            animation: text-glitch 0.2s ease-in-out;
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
         }
 
-        /* Tiêu đề tiếng Việt cực to và sặc sỡ */
-        .title {
-            font-family: 'Anton', sans-serif; font-size: 6vw; text-transform: uppercase;
-            line-height: 1.1; margin-bottom: 20px; letter-spacing: 2px;
-            text-shadow: 4px 4px 0px #FF0055, -4px -4px 0px #00FFFF;
+        /* Typography sang trọng */
+        h1.title {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.5rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            line-height: 1.2;
         }
 
-        .color-1 { color: #FFFF00; } .color-2 { color: #00FF00; } .color-3 { color: #FF00FF; }
-
-        /* Khung nội dung chi tiết */
-        .content-box {
-            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(15px);
-            border: 4px solid #fff; box-shadow: 10px 10px 0px #FF0055;
-            padding: 30px; text-align: left; font-size: 1.5vw; line-height: 1.6;
-            margin-top: 20px; border-radius: 10px;
+        h2.subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 300;
+            letter-spacing: 5px;
+            color: rgba(255,255,255,0.8);
+            text-transform: uppercase;
+            margin-bottom: 30px;
         }
 
-        .content-box strong { color: #00FFFF; font-family: 'Oswald', sans-serif; font-size: 2vw; letter-spacing: 1px; }
-        
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-
-        /* Hiệu ứng rung màn hình cực mạnh (Giật giật) */
-        @keyframes shake-violent {
-            0% { transform: translate(0, 0) rotate(0deg); filter: hue-rotate(0deg); }
-            20% { transform: translate(-20px, 15px) rotate(-2deg); filter: hue-rotate(90deg) invert(10%); }
-            40% { transform: translate(25px, -20px) rotate(3deg); filter: hue-rotate(180deg) invert(20%); }
-            60% { transform: translate(-15px, 25px) rotate(-3deg); filter: hue-rotate(270deg) invert(10%); }
-            80% { transform: translate(20px, -15px) rotate(2deg); filter: hue-rotate(360deg); }
-            100% { transform: translate(0, 0) rotate(0deg); }
+        p.content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #fff;
+            font-weight: 300;
+            margin-bottom: 15px;
         }
 
-        .shake-effect { animation: shake-violent 0.3s cubic-bezier(.36,.07,.19,.97) both; }
-
-        @keyframes text-glitch {
-            0% { transform: scale(1.5) skewX(20deg); filter: brightness(3); }
-            50% { transform: scale(0.9) skewX(-20deg); filter: brightness(0.5); }
-            100% { transform: scale(1) skewX(0); filter: brightness(1); }
+        .highlight {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.5rem;
+            color: #FFD700; /* Vàng kim sang trọng */
         }
 
-        #start-hint {
-            position: fixed; bottom: 5%; width: 100%; text-align: center;
-            font-family: 'Oswald'; font-size: 20px; color: #FFFF00; z-index: 100;
-            animation: blink 0.5s infinite alternate; pointer-events: none;
+        /* Gợi ý click ban đầu */
+        #start-screen {
+            position: absolute;
+            width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            z-index: 100;
+            background: rgba(0,0,0,0.5);
+            transition: opacity 1s ease;
         }
-        @keyframes blink { from { opacity: 1; } to { opacity: 0; } }
+        .start-text {
+            color: #fff; font-family: 'Montserrat'; letter-spacing: 3px;
+            animation: pulse 2s infinite; font-weight: 300;
+        }
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
     </style>
 </head>
 <body>
 
-    <canvas id="space-canvas"></canvas>
-    <div id="start-hint">CLICK ĐỂ BẮT ĐẦU / CHUYỂN CẢNH</div>
+    <canvas id="artCanvas"></canvas>
 
-    <div id="ui-layer">
+    <div id="start-screen" onclick="startPresentation()">
+        <p class="start-text">CLICK ĐỂ BẮT ĐẦU TRẢI NGHIỆM NGHỆ THUẬT & ÂM NHẠC</p>
+    </div>
+
+    <div id="ui-container" onclick="nextSlide()">
         
-        <div class="slide active">
-            <h1 class="title">MỘT SỐ NGHỀ<br><span class="color-1">LIÊN QUAN ĐẾN</span><br><span class="color-3">MĨ THUẬT TẠO HÌNH</span></h1>
+        <div class="slide">
+            <h2 class="subtitle">Khởi nguồn của cái đẹp</h2>
+            <h1 class="title">WELCOME</h1>
+            <p class="content" style="text-align: center; font-size: 1.3rem;">Chào mừng bạn đến với không gian của màu sắc và cảm xúc.</p>
         </div>
 
         <div class="slide">
-            <h1 class="title">HỌA SĨ <span class="color-1">SÁNG TÁC TRANH</span></h1>
-            <div class="content-box">
-                <p><strong>CÔNG VIỆC CHỦ YẾU:</strong> Tạo ra các tác phẩm hội họa, thể hiện tư tưởng nghệ thuật, tình cảm, tâm huyết qua các tác phẩm có thể cảm nhận được bằng thị giác.</p>
-                <div class="grid-2">
-                    <p><strong>SẢN PHẨM:</strong><br>Tranh hội họa (Sơn dầu, lụa, màu nước...)</p>
-                    <p><strong>MÔI TRƯỜNG LÀM VIỆC:</strong><br>Xưởng vẽ (Studio)</p>
-                </div>
+            <h2 class="subtitle">Chuyên đề Mĩ thuật</h2>
+            <h1 class="title">HỌA SĨ<br>SÁNG TÁC TRANH</h1>
+            <p class="content">Họa sĩ sáng tác không đơn thuần là người cầm cọ vẽ lại thế giới. Họ là những người <span class="highlight">dùng màu sắc để kể những câu chuyện vô hình</span>, biến tư tưởng và tình cảm cá nhân thành những tác phẩm thị giác chạm đến tâm hồn người xem.</p>
+        </div>
+
+        <div class="slide">
+            <h1 class="title" style="font-size: 3.5rem;">CÔNG VIỆC CHỦ YẾU</h1>
+            <div style="margin-top: 30px;">
+                <p class="content">✦ <strong>Tìm kiếm cảm hứng:</strong> Quan sát cuộc sống, thiên nhiên và nội tâm để hình thành ý tưởng sáng tác độc bản.</p>
+                <p class="content">✦ <strong>Phác thảo & Bố cục:</strong> Sắp xếp các mảng hình, đường nét để tạo nên cấu trúc vững chắc cho bức tranh.</p>
+                <p class="content">✦ <strong>Hòa sắc & Chất liệu:</strong> Sử dụng sự nhạy bén về màu sắc để phủ lên tranh những lớp lang cảm xúc bằng sơn dầu, acrylic, lụa hoặc màu nước.</p>
             </div>
         </div>
 
         <div class="slide">
-            <h1 class="title">HỌA SĨ <span class="color-2">TRANH IN ĐỒ HỌA</span></h1>
-            <div class="content-box">
-                <p><strong>CÔNG VIỆC CHỦ YẾU:</strong> Sử dụng các kĩ thuật in ấn để sáng tác tranh. Ví dụ như:</p>
-                <ul>
-                    <li>Khắc gỗ (woodcut), khắc axit (etching)</li>
-                    <li>Khắc thạch bản (lithography), in lưới (screen-printing)</li>
-                    <li>Khắc kim loại, in sáp, độc bản...</li>
-                </ul>
-                <div class="grid-2">
-                    <p><strong>SẢN PHẨM:</strong> Tranh in đồ họa</p>
-                    <p><strong>MÔI TRƯỜNG:</strong> Xưởng in đồ họa</p>
-                </div>
-            </div>
+            <h2 class="subtitle">Môi trường làm việc</h2>
+            <h1 class="title">XƯỞNG VẼ (STUDIO)</h1>
+            <p class="content">Xưởng vẽ là thánh đường của người họa sĩ. Nơi đây không có những quy tắc gò bó của văn phòng, chỉ có ánh sáng tự nhiên, mùi ngai ngái của dầu lanh, những tuýp màu đang dùng dở và <span class="highlight">sự tự do tuyệt đối để sáng tạo</span>.</p>
         </div>
 
         <div class="slide">
-            <h1 class="title">NHÀ <span class="color-3">ĐIÊU KHẮC TƯỢNG</span></h1>
-            <div class="content-box">
-                <p><strong>CÔNG VIỆC CHỦ YẾU:</strong> Thể hiện ý tưởng trên các tác phẩm điêu khắc. Công việc chính là chạm trổ, điêu khắc, hoàn thiện tác phẩm đưa ra thông điệp cho công chúng.</p>
-                <div class="grid-2">
-                    <p><strong>SẢN PHẨM:</strong> Tượng, Phù điêu</p>
-                    <p><strong>MÔI TRƯỜNG:</strong> Xưởng điêu khắc</p>
-                </div>
-            </div>
+            <h1 class="title" style="font-size: 3rem;">GIÁ TRỊ NGHỆ THUẬT</h1>
+            <p class="content">Mỗi bức tranh được sinh ra đều mang trong mình một sinh mệnh riêng. Họa sĩ không chỉ làm đẹp cho không gian sống mà còn đóng góp vào di sản văn hóa tinh thần của nhân loại, giúp con người hướng tới cái <strong>Chân - Thiện - Mĩ</strong>.</p>
         </div>
 
-        <div class="slide">
-            <h1 class="title" style="font-size: 4vw;">NGHIÊN CỨU & <span class="color-1">GIẢNG DẠY</span></h1>
-            <div class="content-box grid-2">
-                <div>
-                    <strong>GIÁO VIÊN / GIẢNG VIÊN</strong>
-                    <p>Giảng dạy Mĩ thuật tại các trường phổ thông, đại học, cao đẳng. Sản phẩm là các bài giảng mĩ thuật.</p>
-                </div>
-                <div>
-                    <strong>NHÀ LÍ LUẬN PHÊ BÌNH</strong>
-                    <p>Phê bình, đánh giá, nghiên cứu tác phẩm và tác giả. Làm việc tại các viện nghiên cứu, cơ sở đào tạo.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="slide">
-            <h1 class="title">CƠ SỞ <span class="color-2">ĐÀO TẠO</span></h1>
-            <div class="content-box">
-                <p><strong>TÌM KIẾM THÔNG TIN Ở ĐÂU?</strong></p>
-                <p>Học sinh có thể xem thông tin trên trang website của các cơ sở đào tạo trong và ngoài nước để chọn ngành học phù hợp với năng lực và sở thích.</p>
-                <hr style="border-color: #FF0055; margin: 15px 0;">
-                <p style="font-size: 1.2vw; color: #aaa;">Ví dụ: Đại học Mĩ thuật Việt Nam, Đại học Kiến trúc, Đại học Mĩ thuật Công nghiệp...</p>
-            </div>
-        </div>
-
-        <div class="slide">
-            <h1 class="title" style="font-size: 8vw;">XIN <span class="color-3">CẢM ƠN!</span></h1>
+        <div class="slide" style="text-align: center;">
+            <h1 class="title">XIN CẢM ƠN</h1>
+            <h2 class="subtitle" style="margin-top: 20px;">Đã cùng tôi bước vào thế giới hội họa</h2>
         </div>
 
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
     <script>
-        // --- PHẦN 1: HỆ THỐNG ÂM THANH GIẬT GIẬT ---
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        const audioCtx = new AudioContext();
+        // --- 1. HỆ THỐNG ÂM THANH MƯỢT MÀ & ĐỒNG BỘ ---
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let isPlaying = false;
 
-        function playKickDrum() {
+        // Tạo nhạc nền (Ambient Drone) chảy liên tục
+        function startBackgroundMusic() {
+            const chords = [
+                [261.63, 329.63, 392.00], // C major
+                [293.66, 349.23, 440.00]  // D minor
+            ];
+            
+            chords[0].forEach(freq => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.type = 'sine';
+                osc.frequency.value = freq / 2; // Hạ tone cho ấm
+                
+                // LFO tạo hiệu ứng âm thanh to nhỏ như sóng biển
+                const lfo = audioCtx.createOscillator();
+                lfo.frequency.value = 0.1 + Math.random() * 0.1;
+                const lfoGain = audioCtx.createGain();
+                lfoGain.gain.value = 0.1;
+                lfo.connect(lfoGain);
+                lfoGain.connect(gain.gain);
+                lfo.start();
+
+                gain.gain.value = 0.1;
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+            });
+        }
+
+        // Tạo tiếng "Ting" hòa âm mỗi khi click chuyển cảnh
+        function playClickSyncSound() {
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
+            
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+            osc.frequency.exponentialRampToValueAtTime(1046.50, audioCtx.currentTime + 0.1); // Vuốt lên
+            
+            gain.gain.setValueAtTime(0, audioCtx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.2, audioCtx.currentTime + 0.05);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.5); // Ngân dài mượt mà
+            
             osc.connect(gain);
             gain.connect(audioCtx.destination);
-
-            osc.type = 'sine'; // Tiếng Bass sâu
-            // Vuốt tần số cực nhanh để tạo tiếng "bụp"
-            osc.frequency.setValueAtTime(150, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
-
-            // Tắt âm nhanh
-            gain.gain.setValueAtTime(1, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
-
-            osc.start(audioCtx.currentTime);
-            osc.stop(audioCtx.currentTime + 0.5);
-            
-            // Tạo thêm tiếng Glitch/Noise xé tai
-            const bufferSize = audioCtx.sampleRate * 0.1; // 0.1 giây noise
-            const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-            const data = buffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) {
-                data[i] = Math.random() * 2 - 1;
-            }
-            const noise = audioCtx.createBufferSource();
-            noise.buffer = buffer;
-            const noiseFilter = audioCtx.createBiquadFilter();
-            noiseFilter.type = 'bandpass';
-            noiseFilter.frequency.value = 1000;
-            noise.connect(noiseFilter);
-            noiseFilter.connect(audioCtx.destination);
-            noise.start();
+            osc.start();
+            osc.stop(audioCtx.currentTime + 2);
         }
 
-        // --- PHẦN 2: KHÔNG GIAN 3D VŨ TRỤ SẶC SỠ ---
-        const canvas = document.getElementById('space-canvas');
-        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-
-        const scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0x000000, 0.001);
-
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 2000);
-        camera.position.z = 1000;
-
-        // Tạo các hạt bụi không gian (Stars)
-        const geometry = new THREE.BufferGeometry();
-        const vertices = [];
-        const colors = [];
-        const colorPalette = [new THREE.Color('#FF0055'), new THREE.Color('#00FFFF'), new THREE.Color('#FFFF00'), new THREE.Color('#00FF00')];
-
-        for ( let i = 0; i < 5000; i ++ ) {
-            const x = (Math.random() - 0.5) * 3000;
-            const y = (Math.random() - 0.5) * 3000;
-            const z = (Math.random() - 0.5) * 3000;
-            vertices.push(x, y, z);
-            
-            const c = colorPalette[Math.floor(Math.random() * colorPalette.length)];
-            colors.push(c.r, c.g, c.b);
-        }
-
-        geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-        geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
-
-        const material = new THREE.PointsMaterial({ size: 8, vertexColors: true, transparent: true, opacity: 0.8 });
-        const particles = new THREE.Points(geometry, material);
-        scene.add(particles);
-
-        let speed = 2; // Tốc độ bay bình thường
-
-        function animate() {
-            requestAnimationFrame(animate);
-            // Hiệu ứng lao về phía trước
-            const positions = particles.geometry.attributes.position.array;
-            for(let i = 2; i < positions.length; i += 3) {
-                positions[i] += speed;
-                if(positions[i] > 1000) positions[i] = -2000; // Reset khi vượt qua camera
-            }
-            particles.geometry.attributes.position.needsUpdate = true;
-            particles.rotation.z += 0.001;
-            
-            // Giảm tốc độ từ từ sau khi click
-            if(speed > 2) speed *= 0.95; 
-
-            renderer.render(scene, camera);
-        }
-        animate();
-
-        // --- PHẦN 3: LOGIC CHUYỂN CẢNH & "GIẬT GIẬT" ---
+        // --- 2. LOGIC CHUYỂN SLIDE ---
+        let currentSlide = -1;
         const slides = document.querySelectorAll('.slide');
-        let currentSlide = 0;
 
-        document.body.addEventListener('click', () => {
-            // 1. Kích hoạt âm thanh
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            playKickDrum();
-
-            // 2. Ẩn hint
-            document.getElementById('start-hint').style.display = 'none';
-
-            // 3. Hiệu ứng màn hình giật
-            document.body.classList.remove('shake-effect');
-            void document.body.offsetWidth; // Trigger reflow để chạy lại animation
-            document.body.classList.add('shake-effect');
-
-            // 4. Tăng tốc độ vũ trụ lên cực đại (Warp speed)
-            speed = 100;
+        function startPresentation() {
+            document.getElementById('start-screen').style.opacity = '0';
+            setTimeout(() => document.getElementById('start-screen').style.display = 'none', 1000);
             
-            // Đổi màu nền background chớp nhoáng
-            const flashColors = ['#220000', '#002222', '#222200', '#110022'];
-            scene.background = new THREE.Color(flashColors[Math.floor(Math.random() * flashColors.length)]);
-            setTimeout(() => { scene.background = new THREE.Color(0x000000); }, 150);
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            if (!isPlaying) {
+                startBackgroundMusic();
+                isPlaying = true;
+            }
+            nextSlide(); // Mở slide Welcome
+        }
 
-            // 5. Chuyển Slide
-            slides[currentSlide].classList.remove('active');
-            currentSlide = (currentSlide + 1) % slides.length;
+        function nextSlide() {
+            if(currentSlide >= 0) {
+                slides[currentSlide].classList.remove('active');
+                playClickSyncSound(); // Phát âm thanh đồng bộ khi click
+                changeColors(); // Đổi màu nền lụa
+            }
+            
+            currentSlide++;
+            if(currentSlide >= slides.length) currentSlide = 0; // Lặp lại nếu hết
+            
             slides[currentSlide].classList.add('active');
-        });
+        }
 
-        // Resize Canvas khi thu phóng màn hình
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
+        // --- 3. ĐỒ HỌA DẢI LỤA CHẢY BỔNG (FLOWING AURORA CANVAS) ---
+        const canvas = document.getElementById('artCanvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let time = 0;
+
+        // Bảng màu cho từng lần click (rất nghệ thuật)
+        const palettes = [
+            ['#1a2a6c', '#b21f1f', '#fdbb2d'], // Hoàng hôn
+            ['#000428', '#004e92', '#00f2fe'], // Đại dương đêm
+            ['#4ca1af', '#c4e0e5', '#f3904f'], // Mùa thu
+            ['#42275a', '#734b6d', '#ff9a9e']  // Lãng mạn
+        ];
+        let currentPalette = palettes[0];
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        function changeColors() {
+            currentPalette = palettes[Math.floor(Math.random() * palettes.length)];
+        }
+
+        function drawFluid() {
+            // Làm mờ khung hình cũ tạo hiệu ứng đuôi (motion blur)
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, width, height);
+
+            time += 0.005; // Tốc độ chảy rất chậm, lững lờ
+
+            // Vẽ các dải lụa (sử dụng đường cong hình sin đan xen)
+            ctx.globalCompositeOperation = 'screen'; // Chế độ hòa trộn màu rực rỡ
+            
+            for (let i = 0; i < 3; i++) {
+                ctx.beginPath();
+                ctx.moveTo(0, height / 2);
+                
+                for (let x = 0; x < width; x += 10) {
+                    // Toán học tạo độ uốn lượn
+                    let y = height / 2 + 
+                            Math.sin(x * 0.002 + time + i) * 200 + 
+                            Math.cos(x * 0.005 - time) * 100;
+                    ctx.lineTo(x, y);
+                }
+                
+                // Đổ màu gradient cho dải lụa
+                let gradient = ctx.createLinearGradient(0, 0, width, 0);
+                gradient.addColorStop(0, currentPalette[0]);
+                gradient.addColorStop(0.5, currentPalette[1]);
+                gradient.addColorStop(1, currentPalette[2]);
+                
+                ctx.lineWidth = 40 + Math.sin(time * 2 + i) * 20; // Độ dày lụa thay đổi
+                ctx.strokeStyle = gradient;
+                ctx.stroke();
+            }
+            ctx.globalCompositeOperation = 'source-over';
+            requestAnimationFrame(drawFluid);
+        }
+        drawFluid();
+
     </script>
 </body>
 </html>
