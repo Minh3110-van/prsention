@@ -3,308 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nghệ Thuật Sáng Tác Tranh | Flowing UI</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>SÁNG TÁC TRANH | SUPREME EDITION</title>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@900&family=Oswald:wght@500&display=swap" rel="stylesheet">
     
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
-        
-        body { 
-            font-family: 'Montserrat', sans-serif; 
-            overflow: hidden; 
-            background: #000;
-            color: #333;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #000; overflow: hidden; font-family: 'Oswald', sans-serif; color: #fff; }
+
+        /* Canvas nền sặc sỡ bay bổng */
+        #bg-canvas { position: fixed; top: 0; left: 0; z-index: 1; filter: blur(30px); opacity: 0.8; }
+
+        /* Lớp hiệu ứng Glitch Intro */
+        #intro-overlay {
+            position: fixed; inset: 0; z-index: 100;
+            background: #000; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: 0.5s;
         }
 
-        /* Canvas vẽ hiệu ứng dải lụa chảy bổng */
-        canvas {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            z-index: 0;
+        .intro-text {
+            font-family: 'Anton', sans-serif; font-size: 8vw;
+            color: #fff; text-transform: uppercase;
+            text-shadow: 4px 4px #ff0055, -4px -4px #00f2ff;
+            animation: glitch-intro 0.1s infinite;
         }
 
-        /* Lớp phủ UI Kính mờ (Glassmorphism) */
-        #ui-container {
-            position: fixed; top: 0; left: 0; 
-            width: 100vw; height: 100vh;
-            z-index: 10;
+        @keyframes glitch-intro {
+            0% { transform: translate(0); }
+            20% { transform: translate(-5px, 5px); }
+            40% { transform: translate(-5px, -5px) skewX(10deg); }
+            60% { transform: translate(5px, 5px); }
+            80% { transform: translate(5px, -5px) skewY(-5deg); }
+            100% { transform: translate(0); }
+        }
+
+        /* Giao diện chính */
+        #main-ui {
+            position: relative; z-index: 10; height: 100vh;
             display: flex; align-items: center; justify-content: center;
         }
 
         .slide {
-            position: absolute;
-            width: 80%; max-width: 900px;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            border-radius: 30px;
-            padding: 60px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
-            
-            /* Hiệu ứng chuyển cảnh mượt mà như video */
-            opacity: 0;
-            transform: translateY(50px) scale(0.95);
-            transition: all 1.2s cubic-bezier(0.25, 1, 0.5, 1);
-            pointer-events: none;
+            position: absolute; width: 90%; text-align: center;
+            display: none; transition: 0.5s;
         }
 
-        .slide.active {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-            pointer-events: auto;
+        .slide.active { display: block; animation: slide-in 0.8s cubic-bezier(0.19, 1, 0.22, 1); }
+
+        @keyframes slide-in {
+            0% { opacity: 0; transform: scale(3) rotate(10deg); filter: blur(20px); }
+            100% { opacity: 1; transform: scale(1) rotate(0deg); filter: blur(0px); }
         }
 
-        /* Typography sang trọng */
-        h1.title {
-            font-family: 'Playfair Display', serif;
-            font-size: 4.5rem;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 10px;
-            text-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            line-height: 1.2;
+        /* Chữ sặc sỡ, không dùng khung */
+        .big-title {
+            font-family: 'Anton', sans-serif; font-size: 10vw; line-height: 0.9;
+            background: linear-gradient(90deg, #ff0055, #ffea00, #00f2ff, #ff0055);
+            background-size: 300%; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: flow-color 5s linear infinite; margin-bottom: 20px;
         }
 
-        h2.subtitle {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1.2rem;
-            font-weight: 300;
-            letter-spacing: 5px;
-            color: rgba(255,255,255,0.8);
-            text-transform: uppercase;
-            margin-bottom: 30px;
+        @keyframes flow-color { 0% { background-position: 0%; } 100% { background-position: 300%; } }
+
+        .desc-text {
+            font-size: 2.5vw; max-width: 80%; margin: 0 auto;
+            color: #fff; text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+            font-weight: 500; line-height: 1.4;
         }
 
-        p.content {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: #fff;
-            font-weight: 300;
-            margin-bottom: 15px;
+        .step-list { text-align: left; list-style: none; display: inline-block; }
+        .step-list li { 
+            font-size: 2vw; margin-bottom: 20px; 
+            padding-left: 30px; border-left: 8px solid #ff0055;
+            background: rgba(255,255,255,0.1); padding: 10px 20px;
         }
 
-        .highlight {
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
-            font-size: 1.5rem;
-            color: #FFD700; /* Vàng kim sang trọng */
+        #hint {
+            position: fixed; bottom: 30px; width: 100%; text-align: center;
+            font-size: 1.2rem; letter-spacing: 5px; opacity: 0.5; z-index: 20;
         }
-
-        /* Gợi ý click ban đầu */
-        #start-screen {
-            position: absolute;
-            width: 100%; height: 100%;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            z-index: 100;
-            background: rgba(0,0,0,0.5);
-            transition: opacity 1s ease;
-        }
-        .start-text {
-            color: #fff; font-family: 'Montserrat'; letter-spacing: 3px;
-            animation: pulse 2s infinite; font-weight: 300;
-        }
-        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
     </style>
 </head>
-<body>
+<body onclick="handleControl()">
 
-    <canvas id="artCanvas"></canvas>
+    <canvas id="bg-canvas"></canvas>
 
-    <div id="start-screen" onclick="startPresentation()">
-        <p class="start-text">CLICK ĐỂ BẮT ĐẦU TRẢI NGHIỆM NGHỆ THUẬT & ÂM NHẠC</p>
+    <div id="intro-overlay">
+        <div class="intro-text">CLICK TO START</div>
     </div>
 
-    <div id="ui-container" onclick="nextSlide()">
-        
+    <div id="main-ui">
         <div class="slide">
-            <h2 class="subtitle">Khởi nguồn của cái đẹp</h2>
-            <h1 class="title">WELCOME</h1>
-            <p class="content" style="text-align: center; font-size: 1.3rem;">Chào mừng bạn đến với không gian của màu sắc và cảm xúc.</p>
+            <h1 class="big-title">WELCOME<br>PRESENTATION</h1>
         </div>
 
         <div class="slide">
-            <h2 class="subtitle">Chuyên đề Mĩ thuật</h2>
-            <h1 class="title">HỌA SĨ<br>SÁNG TÁC TRANH</h1>
-            <p class="content">Họa sĩ sáng tác không đơn thuần là người cầm cọ vẽ lại thế giới. Họ là những người <span class="highlight">dùng màu sắc để kể những câu chuyện vô hình</span>, biến tư tưởng và tình cảm cá nhân thành những tác phẩm thị giác chạm đến tâm hồn người xem.</p>
+            <h1 class="big-title" style="font-size: 8vw;">HỌA SĨ<br>SÁNG TÁC TRANH</h1>
+            <p class="desc-text">Nghề này đơn giản là dùng cọ và màu vẽ để nói lên suy nghĩ của mình thôi!</p>
         </div>
 
         <div class="slide">
-            <h1 class="title" style="font-size: 3.5rem;">CÔNG VIỆC CHỦ YẾU</h1>
-            <div style="margin-top: 30px;">
-                <p class="content">✦ <strong>Tìm kiếm cảm hứng:</strong> Quan sát cuộc sống, thiên nhiên và nội tâm để hình thành ý tưởng sáng tác độc bản.</p>
-                <p class="content">✦ <strong>Phác thảo & Bố cục:</strong> Sắp xếp các mảng hình, đường nét để tạo nên cấu trúc vững chắc cho bức tranh.</p>
-                <p class="content">✦ <strong>Hòa sắc & Chất liệu:</strong> Sử dụng sự nhạy bén về màu sắc để phủ lên tranh những lớp lang cảm xúc bằng sơn dầu, acrylic, lụa hoặc màu nước.</p>
-            </div>
+            <h1 class="big-title" style="font-size: 5vw;">HẰNG NGÀY LÀM GÌ?</h1>
+            <ul class="step-list">
+                <li>🎨 <b>Tìm cảm hứng:</b> Đi đây đi đó ngắm nghía rồi mới vẽ được.</li>
+                <li>✏️ <b>Phác thảo:</b> Vẽ nháp trước mấy cái hình cho chuẩn bố cục.</li>
+                <li>🖌️ <b>Lên màu:</b> Đây là lúc cháy nhất, dùng đủ loại màu để hoàn thiện.</li>
+                <li>🖼️ <b>Triển lãm:</b> Đem con cưng đi khoe với mọi người.</li>
+            </ul>
         </div>
 
         <div class="slide">
-            <h2 class="subtitle">Môi trường làm việc</h2>
-            <h1 class="title">XƯỞNG VẼ (STUDIO)</h1>
-            <p class="content">Xưởng vẽ là thánh đường của người họa sĩ. Nơi đây không có những quy tắc gò bó của văn phòng, chỉ có ánh sáng tự nhiên, mùi ngai ngái của dầu lanh, những tuýp màu đang dùng dở và <span class="highlight">sự tự do tuyệt đối để sáng tạo</span>.</p>
+            <h1 class="big-title">XƯỞNG VẼ</h1>
+            <p class="desc-text">Thường là một căn phòng bừa bộn màu vẽ nhưng cực kỳ tự do. Không ai cấm bạn sáng tạo ở đây cả!</p>
         </div>
 
         <div class="slide">
-            <h1 class="title" style="font-size: 3rem;">GIÁ TRỊ NGHỆ THUẬT</h1>
-            <p class="content">Mỗi bức tranh được sinh ra đều mang trong mình một sinh mệnh riêng. Họa sĩ không chỉ làm đẹp cho không gian sống mà còn đóng góp vào di sản văn hóa tinh thần của nhân loại, giúp con người hướng tới cái <strong>Chân - Thiện - Mĩ</strong>.</p>
+            <h1 class="big-title">THANKS!<br>BYE BYE</h1>
         </div>
-
-        <div class="slide" style="text-align: center;">
-            <h1 class="title">XIN CẢM ƠN</h1>
-            <h2 class="subtitle" style="margin-top: 20px;">Đã cùng tôi bước vào thế giới hội họa</h2>
-        </div>
-
     </div>
+
+    <div id="hint">CLICK ĐỂ CHUYỂN</div>
 
     <script>
-        // --- 1. HỆ THỐNG ÂM THANH MƯỢT MÀ & ĐỒNG BỘ ---
+        // --- ÂM THANH GIẬT GIẬT VÀ NHẠC NỀN ---
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        let isPlaying = false;
+        let bgOsc = null;
 
-        // Tạo nhạc nền (Ambient Drone) chảy liên tục
-        function startBackgroundMusic() {
-            const chords = [
-                [261.63, 329.63, 392.00], // C major
-                [293.66, 349.23, 440.00]  // D minor
-            ];
-            
-            chords[0].forEach(freq => {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                
-                osc.type = 'sine';
-                osc.frequency.value = freq / 2; // Hạ tone cho ấm
-                
-                // LFO tạo hiệu ứng âm thanh to nhỏ như sóng biển
-                const lfo = audioCtx.createOscillator();
-                lfo.frequency.value = 0.1 + Math.random() * 0.1;
-                const lfoGain = audioCtx.createGain();
-                lfoGain.gain.value = 0.1;
-                lfo.connect(lfoGain);
-                lfoGain.connect(gain.gain);
-                lfo.start();
-
-                gain.gain.value = 0.1;
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-            });
-        }
-
-        // Tạo tiếng "Ting" hòa âm mỗi khi click chuyển cảnh
-        function playClickSyncSound() {
+        function playIntroBoom() {
+            // Tiếng Bass đập mạnh lúc mới vào
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
-            
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
-            osc.frequency.exponentialRampToValueAtTime(1046.50, audioCtx.currentTime + 0.1); // Vuốt lên
-            
-            gain.gain.setValueAtTime(0, audioCtx.currentTime);
-            gain.gain.linearRampToValueAtTime(0.2, audioCtx.currentTime + 0.05);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.5); // Ngân dài mượt mà
-            
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 2);
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(40, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.1);
+            gain.gain.setValueAtTime(1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + 1);
         }
 
-        // --- 2. LOGIC CHUYỂN SLIDE ---
-        let currentSlide = -1;
+        function playStepSound() {
+            // Tiếng "Chát" khi chuyển slide
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.2);
+        }
+
+        function startBackgroundMusic() {
+            // Tạo tiếng nhạc điện tử lofi chạy nền
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.value = 110; // A2
+            gain.gain.value = 0.05;
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start();
+        }
+
+        // --- LOGIC ĐIỀU KHIỂN ---
+        let step = -1;
         const slides = document.querySelectorAll('.slide');
 
-        function startPresentation() {
-            document.getElementById('start-screen').style.opacity = '0';
-            setTimeout(() => document.getElementById('start-screen').style.display = 'none', 1000);
-            
+        function handleControl() {
             if (audioCtx.state === 'suspended') audioCtx.resume();
-            if (!isPlaying) {
+
+            if (step === -1) {
+                // Intro phá vỡ
+                playIntroBoom();
                 startBackgroundMusic();
-                isPlaying = true;
+                document.getElementById('intro-overlay').style.opacity = '0';
+                setTimeout(() => document.getElementById('intro-overlay').remove(), 500);
+            } else {
+                playStepSound();
+                slides[step].classList.remove('active');
             }
-            nextSlide(); // Mở slide Welcome
+
+            step++;
+            if (step >= slides.length) step = 0;
+            
+            slides[step].classList.add('active');
+            
+            // Giật giật hiệu ứng camera
+            document.body.style.transform = `scale(1.1) translate(${Math.random()*10}px, ${Math.random()*10}px)`;
+            setTimeout(() => document.body.style.transform = 'scale(1)', 100);
         }
 
-        function nextSlide() {
-            if(currentSlide >= 0) {
-                slides[currentSlide].classList.remove('active');
-                playClickSyncSound(); // Phát âm thanh đồng bộ khi click
-                changeColors(); // Đổi màu nền lụa
-            }
-            
-            currentSlide++;
-            if(currentSlide >= slides.length) currentSlide = 0; // Lặp lại nếu hết
-            
-            slides[currentSlide].classList.add('active');
-        }
-
-        // --- 3. ĐỒ HỌA DẢI LỤA CHẢY BỔNG (FLOWING AURORA CANVAS) ---
-        const canvas = document.getElementById('artCanvas');
+        // --- ĐỒ HỌA NỀN SẶC SỠ ---
+        const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
-        let width, height;
-        let time = 0;
+        let w, h, circles = [];
 
-        // Bảng màu cho từng lần click (rất nghệ thuật)
-        const palettes = [
-            ['#1a2a6c', '#b21f1f', '#fdbb2d'], // Hoàng hôn
-            ['#000428', '#004e92', '#00f2fe'], // Đại dương đêm
-            ['#4ca1af', '#c4e0e5', '#f3904f'], // Mùa thu
-            ['#42275a', '#734b6d', '#ff9a9e']  // Lãng mạn
-        ];
-        let currentPalette = palettes[0];
-
-        function resize() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resize);
-        resize();
-
-        function changeColors() {
-            currentPalette = palettes[Math.floor(Math.random() * palettes.length)];
-        }
-
-        function drawFluid() {
-            // Làm mờ khung hình cũ tạo hiệu ứng đuôi (motion blur)
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.fillRect(0, 0, width, height);
-
-            time += 0.005; // Tốc độ chảy rất chậm, lững lờ
-
-            // Vẽ các dải lụa (sử dụng đường cong hình sin đan xen)
-            ctx.globalCompositeOperation = 'screen'; // Chế độ hòa trộn màu rực rỡ
-            
-            for (let i = 0; i < 3; i++) {
-                ctx.beginPath();
-                ctx.moveTo(0, height / 2);
-                
-                for (let x = 0; x < width; x += 10) {
-                    // Toán học tạo độ uốn lượn
-                    let y = height / 2 + 
-                            Math.sin(x * 0.002 + time + i) * 200 + 
-                            Math.cos(x * 0.005 - time) * 100;
-                    ctx.lineTo(x, y);
-                }
-                
-                // Đổ màu gradient cho dải lụa
-                let gradient = ctx.createLinearGradient(0, 0, width, 0);
-                gradient.addColorStop(0, currentPalette[0]);
-                gradient.addColorStop(0.5, currentPalette[1]);
-                gradient.addColorStop(1, currentPalette[2]);
-                
-                ctx.lineWidth = 40 + Math.sin(time * 2 + i) * 20; // Độ dày lụa thay đổi
-                ctx.strokeStyle = gradient;
-                ctx.stroke();
+        function initCanvas() {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+            for(let i=0; i<15; i++) {
+                circles.push({
+                    x: Math.random()*w, y: Math.random()*h,
+                    r: Math.random()*200 + 100,
+                    vx: Math.random()*2 - 1, vy: Math.random()*2 - 1,
+                    c: `hsl(${Math.random()*360}, 70%, 50%)`
+                });
             }
-            ctx.globalCompositeOperation = 'source-over';
-            requestAnimationFrame(drawFluid);
         }
-        drawFluid();
 
+        function draw() {
+            ctx.clearRect(0, 0, w, h);
+            circles.forEach(c => {
+                ctx.beginPath();
+                ctx.arc(c.x, c.y, c.r, 0, Math.PI*2);
+                ctx.fillStyle = c.c;
+                ctx.fill();
+                c.x += c.vx; c.y += c.vy;
+                if(c.x < 0 || c.x > w) c.vx *= -1;
+                if(c.y < 0 || c.y > h) c.vy *= -1;
+            });
+            requestAnimationFrame(draw);
+        }
+
+        initCanvas();
+        draw();
+        window.onresize = initCanvas;
     </script>
 </body>
 </html>
